@@ -4,6 +4,61 @@ textarea {
   padding: 0px;
 }
 
-img {
+.camperImg {
   max-width: 50px;
+  border-radius: 5px;
+  border: 2px solid white !important;
 }
+
+
+.fcc {
+  display: block;
+  margin: 50px auto;
+  max-width: 50%;
+
+}
+
+.btn {
+  min-width: 100%;
+  text-align: center;
+}
+
+.align {
+  text-align: center;
+}
+
+
+body {
+  background-color: gray !important;
+  margin: 50px 0px !important;
+
+}
+
+a:link {
+    text-decoration: none !important;
+    color: inherit;
+    cursor: auto;
+}
+
+a:visited {
+    text-decoration: !important;
+    color: inherit;
+    cursor: auto;
+}
+
+
+a {
+  margin-left: 20px;
+  font-size: 1em;
+  color: white !important;
+
+}
+
+ a:hover {
+  cursor: pointer;
+ }
+
+
+ td, th {
+  font-family: 'Montserrat', sans-serif;
+   }

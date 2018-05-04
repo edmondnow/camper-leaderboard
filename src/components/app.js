@@ -5,81 +5,94 @@ import axios from 'axios';
 const topRecent = 'https://fcctop100.herokuapp.com/api/fccusers/top/recent';
 const topAll = 'https://fcctop100.herokuapp.com/api/fccusers/top/alltime';
 
-class App extends Component{
+class MakeCamperChart extends Component{
 
   constructor(props){
     super(props); 
-    this.getData = this.getData.bind(this);
     this.state = {
-      data: null,
-      table: null
+      camperData: null,
+      tableData: null,
+      recent: 'desc', 
+      username: 'asc',
+      alltime: 'asc' 
     }
-    this.getData()
+
+    this.sortBy = this.sortBy.bind(this);
+    this.getData();
   }
 
   getData(){
-    axios.get(topRecent)
-      .then(results => 
-        axios.get(topAll).then(results2 => {
-          let data = [...results.data, ...results2.data];
-          data = _.uniqBy(data, e => {
-            return e.username
-          }) 
-          this.setState({data})
-          this.makeTableData(this.state.data)
+    axios.get(topRecent).then(topRecentCampers => 
+      axios.get(topAll).then(topAllTimeCampers => {
+          let camperData = [...topRecentCampers.data, ...topAllTimeCampers.data];
+          camperData = _.uniqBy(camperData, camper => {
+            return camper.username;
+          })
+          this.setState({camperData});
+          this.makeTableData(camperData);
         })
       )
   }
 
-  makeTableData(data){
-   var table = data.map( item => {
-      let url = `https://www.freecodecamp.org/${item.username}`;
+  makeTableData(camperData){
+   let tableData = camperData.map( (camper, index) => {
+      let url = `https://www.freecodecamp.org/${camper.username}`;
       return(
-        <tr key={item.img}>
-          <td>{item.index}</td>
+        <tr key={`${camper.img}${Math.random()}`}>
+          <td className="align">{index + 1}</td>
           <td>
-            <img src={item.img}/>
-            <a href={url}>{item.username}</a>
+            <img src={camper.img} className="camperImg"/>
+            <a href={url}>{camper.username}</a>
           </td>
-          <td>
-            {item.recent}
+          <td className="align">
+            {camper.recent}
           </td>
-          <td>
-            {item.alltime}
+          <td className="align">
+            {camper.alltime}
           </td>
         </tr>
       )
     });
-    this.setState({table})
+    this.setState({tableData})
   }
 
 
-  
+sortBy(event){
+  let column = event.target.id
+  console.log(event.target.id)
+  let sortStatus = this.state[column];
+  if(sortStatus == 'desc'){
+      sortStatus = 'asc'
+      this.setState({[column]: 'asc'})
+    } else if(sortStatus == 'asc') {
+      sortStatus = 'desc';
+      this.setState({[column]: 'desc'})
+    }
+    let camperData = _.orderBy(this.state.camperData, [column], [sortStatus])
+    this.makeTableData(camperData)
+}
+
   render(){
-    if(!this.state.data){
+    if(!this.state.tableData){
       return <div>Loading...</div>
     } else{
       return (
         <table className="table table-dark">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Camper Name</th>
-              <th>Recent</th>
-              <th>All Time</th>
+              <th className="align">#</th>
+              <th><button className="btn btn-secondary" id="username" onClick={this.sortBy}>Camper Name</button></th>
+              <th><button className="btn btn-secondary" id="recent" onClick={this.sortBy}>Top Recent</button></th>
+              <th><button className="btn btn-secondary" id="alltime" onClick={this.sortBy}>Top All Time</button></th>
             </tr>
           </thead>
-          {this.state.table}
+          <tbody>
+          {this.state.tableData}
+          </tbody>
         </table>
       )  
     }
   } 
 }
 
-
-export default App;
-
-/*
-
-
-            */
+export default MakeCamperChart;
