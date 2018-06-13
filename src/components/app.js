@@ -53,23 +53,22 @@ class MakeCamperChart extends Component{
         </tr>
       )
     });
-    this.setState({tableData})
+    this.setState({tableData});
   }
 
 
 sortBy(event){
-  let column = event.target.id
-  console.log(event.target.id)
+  let column = event.target.id;
   let sortStatus = this.state[column];
   if(sortStatus == 'desc'){
-      sortStatus = 'asc'
-      this.setState({[column]: 'asc'})
+      sortStatus = 'asc';
+      this.setState({[column]: 'asc'});
     } else if(sortStatus == 'asc') {
       sortStatus = 'desc';
-      this.setState({[column]: 'desc'})
+      this.setState({[column]: 'desc'});
     }
-    let camperData = _.orderBy(this.state.camperData, [column], [sortStatus])
-    this.makeTableData(camperData)
+    let camperData = _.orderBy(this.state.camperData, [column], [sortStatus]);
+    this.makeTableData(camperData);
 }
 
   render(){
